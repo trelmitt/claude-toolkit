@@ -1,0 +1,28 @@
+{
+  "name": "trevor-tools",
+  "owner": {
+    "name": "Trevor Elmitt"
+  },
+  "metadata": {
+    "description": "A shareable Claude Code marketplace: autonomous dev-loop guardrails and a portable skill library for shipping software."
+  },
+  "plugins": [
+    {
+      "name": "dev-loop",
+      "source": "./plugins/dev-loop",
+      "description": "Autonomous dev-loop guardrails: protection hooks (no pushes/commits to protected branches, no force-push, no .env/secret writes, no committing live secrets), a SessionStart situational-awareness hook, an end-of-session retro-capture nudge, an optional deterministic notes-vault tidy loop, a Supabase/Stripe/PHI security-reviewer subagent, and the /ship, /babysit-prs, /create-migration, /deploy-edge-function, /retro, /spike skills. Vault features are env-configurable and no-op when no vault is present.",
+      "version": "1.8.1",
+      "author": {
+        "name": "Trevor Elmitt"
+      }
+    },
+    {
+      "name": "trevor-skills",
+      "source": "./plugins/trevor-skills",
+      "description": "A portable skill set for shipping software: cracked-dev, skill-forge, sr-fullstack-engineer, sr-security-auditor, deep-research, build-vs-borrow, oss-scout, migration-safety-reviewer, supabase-rls-test-harness, evaluator, and product/strategy skills. Works standalone; notes-vault features are optional.",
+      "author": {
+        "name": "Trevor Elmitt"
+      }
+    }
+  ]
+}

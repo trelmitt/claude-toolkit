@@ -1,0 +1,8 @@
+{
+  "name": "dev-loop",
+  "description": "Autonomous dev-loop guardrails and skills: protection hooks (no pushes/commits to protected branches, no .env/secret writes, no committing live secrets, no backtick-mangled -m commit messages), a SessionStart hook (situational-awareness + retro-nudge + git-identity-check + config-drift-check + vault & .cracked-dev/state read-back), two Stop hooks (one nudges an end-of-session retro capture into the git-backed stores; one opens a deterministic vault-tidy PR — wikilinks + frontmatter — against the vault, worktree-isolated, branch-only), a Supabase/Stripe/PHI security-reviewer subagent, and the /ship, /babysit-prs, /create-migration, /deploy-edge-function, /retro, /spike skills.",
+  "version": "1.8.1",
+  "author": {
+    "name": "Trevor Elmitt"
+  }
+}

@@ -1,0 +1,86 @@
+-- supabase-rls-test-harness :: owner-scoped template
+-- Rendered by scripts/gen-rls-test.ts -> supabase/tests/database/NNN-{{TABLE}}-rls.test.sql
+--
+-- For tables whose policies key off auth.uid() = {{OWNER_COL}} (e.g. profiles,
+-- push_subscriptions). Tenant A (alice) must only SELECT/UPDATE/DELETE her OWN row and
+-- must not be able to INSERT a row owned by tenant B (bob). Positive controls included.
+--
+-- Same invariants as org-isolation.sql.tmpl: seed as superuser, assert as `authenticated`,
+-- literal ids only, throws_ok asserts the exact RLS message, plan(N) = assertion count.
+-- For trigger-backed owner tables (e.g. profiles, where handle_new_user auto-creates the
+-- row keyed on the new auth.users id) the generator OMITS the manual @seed:owner block and
+-- sets {{ROW_A}}={{ALICE}} / {{ROW_B}}={{BOB}}; the rows already exist from the trigger.
+
+begin;
+create extension if not exists pgtap with schema extensions;
+
+insert into auth.users
+  (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+   created_at, updated_at, raw_app_meta_data, raw_user_meta_data,
+   confirmation_token, recovery_token, email_change_token_new, email_change)
+values
+  ('00000000-0000-0000-0000-000000000000', '{{ALICE}}', 'authenticated', 'authenticated',
+   'alice+rlstest@example.test', '', now(), now(), now(),
+   '{"provider":"email","providers":["email"]}', '{}', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000', '{{BOB}}', 'authenticated', 'authenticated',
+   'bob+rlstest@example.test', '', now(), now(), now(),
+   '{"provider":"email","providers":["email"]}', '{}', '', '', '', '');
+
+-- @seed:owner
+insert into public.{{TABLE}} (id, {{OWNER_COL}}{{SEED_EXTRA_COLS}}) values
+  ('{{ROW_A}}', '{{ALICE}}'{{SEED_EXTRA_VALS_A}}),
+  ('{{ROW_B}}', '{{BOB}}'{{SEED_EXTRA_VALS_B}})
+on conflict (id) do nothing;
+-- @end:seed
+
+select plan({{PLAN}});
+
+select is(
+  (select relrowsecurity from pg_class where oid = 'public.{{TABLE}}'::regclass),
+  true,
+  'RLS is enabled on public.{{TABLE}}');
+
+set local role authenticated;
+select set_config('request.jwt.claims',
+  '{"sub":"{{ALICE}}","role":"authenticated"}', true);
+select isnt( (select auth.uid()), null, 'auth.uid() is populated for the authenticated role');
+select is( (select auth.uid()), '{{ALICE}}'::uuid, 'auth.uid() resolves to alice');
+
+-- @cmd:select ---------------------------------------------------------------
+select isnt_empty(
+  'select 1 from public.{{TABLE}} where {{OWNER_COL}} = ''{{ALICE}}''',
+  'SELECT positive control: alice CAN see her own row');
+select is_empty(
+  'select 1 from public.{{TABLE}} where {{OWNER_COL}} = ''{{BOB}}''',
+  'SELECT: alice CANNOT see bob''s row');
+-- @end:select
+
+-- @cmd:insert ---------------------------------------------------------------
+select throws_ok(
+  'insert into public.{{TABLE}} ({{FORGE_COLS}}{{SEED_EXTRA_COLS}}) '
+  || 'values ({{FORGE_VALS}}{{SEED_EXTRA_VALS_A_Q}})',
+  '42501',
+  'new row violates row-level security policy for table "{{TABLE}}"',
+  'INSERT: alice CANNOT create a row she does not own (WITH CHECK)');
+-- @end:insert
+
+-- @cmd:update ---------------------------------------------------------------
+select is_empty(
+  'update public.{{TABLE}} set {{OWNER_COL}} = {{OWNER_COL}} where {{OWNER_COL}} = ''{{BOB}}'' returning {{OWNER_COL}}',
+  'UPDATE: alice CANNOT update bob''s row (USING filter -> 0 rows)');
+-- @end:update
+
+-- @cmd:delete ---------------------------------------------------------------
+select is_empty(
+  'delete from public.{{TABLE}} where {{OWNER_COL}} = ''{{BOB}}'' returning {{OWNER_COL}}',
+  'DELETE: alice CANNOT delete bob''s row (USING filter -> 0 rows)');
+-- @end:delete
+
+reset role;
+select set_config('request.jwt.claims', '', true);
+select isnt_empty(
+  'select 1 from public.{{TABLE}} where {{OWNER_COL}} = ''{{BOB}}''',
+  'ground truth: bob''s row survived every attack by alice');
+
+select * from finish();
+rollback;

@@ -1,0 +1,133 @@
+-- supabase-rls-test-harness :: org-isolation template
+-- Rendered by scripts/gen-rls-test.ts -> supabase/tests/database/NNN-{{TABLE}}-rls.test.sql
+--
+-- Proves per-org row isolation for a multi-tenant table whose policies key off
+-- is_org_member(auth.uid(), {{TENANT_COL}})  (or the inline org_members subquery).
+-- Tenant A (alice) must not SELECT / INSERT / UPDATE / DELETE tenant B's (bob) rows,
+-- and POSITIVE controls prove A can act on its own — so a "deny everything" policy
+-- still fails. See references/cardinal-mistakes.md for why each guard exists.
+--
+-- DESIGN INVARIANTS (do not weaken when a test goes red — fix the FIXTURE, not the assert):
+--   * Seeds run as the test superuser (BYPASSRLS). Assertions run as role `authenticated`.
+--   * No assertion reads a setup-owned temp/working table (that raises 42501 BEFORE RLS,
+--     which both red-flags correct isolation AND makes throws_ok('42501') pass vacuously).
+--     => every id below is a LITERAL the generator inlined.
+--   * org_members.active is set TRUE explicitly here (it comes from a column DEFAULT in the
+--     schema, NOT from the signup trigger — never rely on the trigger for it).
+--   * throws_ok asserts the EXACT RLS message, not just SQLSTATE 42501 (which is generic
+--     insufficient_privilege and would be satisfied by any unrelated permission error).
+--   * plan(N) is written by the generator to equal the number of assertions actually emitted.
+
+begin;
+create extension if not exists pgtap with schema extensions;
+
+-- ---------------------------------------------------------------------------
+-- SEED (as superuser / BYPASSRLS — supabase test db connects as postgres)
+-- ---------------------------------------------------------------------------
+-- Two synthetic users. We insert auth.users so any FK from org_members/created_by
+-- resolves. The signup triggers (handle_new_user / handle_new_user_org) will also
+-- fire and auto-create an org+membership per user; that is harmless noise — our
+-- assertions only touch the EXPLICIT orgs below, by literal id.
+-- NOTE: if your auth.users schema has drifted and this insert errors, swap to the
+-- basejump tests.create_supabase_user() helper (see references/fallback-vitest.md).
+insert into auth.users
+  (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+   created_at, updated_at, raw_app_meta_data, raw_user_meta_data,
+   confirmation_token, recovery_token, email_change_token_new, email_change)
+values
+  ('00000000-0000-0000-0000-000000000000', '{{ALICE}}', 'authenticated', 'authenticated',
+   'alice+rlstest@example.test', '', now(), now(), now(),
+   '{"provider":"email","providers":["email"]}', '{}', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000', '{{BOB}}', 'authenticated', 'authenticated',
+   'bob+rlstest@example.test', '', now(), now(), now(),
+   '{"provider":"email","providers":["email"]}', '{}', '', '', '', '');
+
+-- Explicit orgs with KNOWN ids + ACTIVE memberships (active=true set on purpose).
+insert into public.organizations (id, name, type, created_by) values
+  ('{{ORG_A}}', 'RLS Test Org A', 'team', '{{ALICE}}'),
+  ('{{ORG_B}}', 'RLS Test Org B', 'team', '{{BOB}}');
+
+insert into public.org_members (org_id, user_id, role, active) values
+  ('{{ORG_A}}', '{{ALICE}}', 'owner', true),
+  ('{{ORG_B}}', '{{BOB}}', 'owner', true);
+
+-- One target row per org. The generator appends any extra NOT NULL columns it introspected
+-- (review them if it emitted a TODO placeholder).
+insert into public.{{TABLE}} (id, {{TENANT_COL}}, created_by{{SEED_EXTRA_COLS}}) values
+  ('{{ROW_A}}', '{{ORG_A}}', '{{ALICE}}'{{SEED_EXTRA_VALS_A}}),
+  ('{{ROW_B}}', '{{ORG_B}}', '{{BOB}}'{{SEED_EXTRA_VALS_B}});
+
+select plan({{PLAN}});
+
+-- ---------------------------------------------------------------------------
+-- TEETH: the table must actually have RLS turned on (catches a forced-off table)
+-- ---------------------------------------------------------------------------
+select is(
+  (select relrowsecurity from pg_class where oid = 'public.{{TABLE}}'::regclass),
+  true,
+  'RLS is enabled on public.{{TABLE}}');
+
+-- ---------------------------------------------------------------------------
+-- Become tenant A (alice): drop BYPASSRLS, set the JWT claims so auth.uid() resolves
+-- ---------------------------------------------------------------------------
+set local role authenticated;
+select set_config('request.jwt.claims',
+  '{"sub":"{{ALICE}}","role":"authenticated"}', true);
+
+select isnt( (select auth.uid()), null, 'auth.uid() is populated for the authenticated role');
+select is( (select auth.uid()), '{{ALICE}}'::uuid, 'auth.uid() resolves to tenant A (alice)');
+
+-- @cmd:select ---------------------------------------------------------------
+select results_eq(
+  'select count(*)::int from public.{{TABLE}}',
+  array[1],
+  'SELECT: alice sees exactly her own org rows (no leak of org B)');
+select isnt_empty(
+  'select 1 from public.{{TABLE}} where {{TENANT_COL}} = ''{{ORG_A}}''',
+  'SELECT positive control: alice CAN see her own org A row');
+select is_empty(
+  'select 1 from public.{{TABLE}} where {{TENANT_COL}} = ''{{ORG_B}}''',
+  'SELECT: alice CANNOT see org B rows');
+-- @end:select
+
+-- @cmd:insert ---------------------------------------------------------------
+select lives_ok(
+  'insert into public.{{TABLE}} (id, {{TENANT_COL}}, created_by{{SEED_EXTRA_COLS}}) '
+  || 'values (gen_random_uuid(), ''{{ORG_A}}'', auth.uid(){{SEED_EXTRA_VALS_A_Q}})',
+  'INSERT positive control: alice CAN insert into her own org A');
+select throws_ok(
+  'insert into public.{{TABLE}} (id, {{TENANT_COL}}, created_by{{SEED_EXTRA_COLS}}) '
+  || 'values (gen_random_uuid(), ''{{ORG_B}}'', auth.uid(){{SEED_EXTRA_VALS_A_Q}})',
+  '42501',
+  'new row violates row-level security policy for table "{{TABLE}}"',
+  'INSERT: alice CANNOT create a row in org B (WITH CHECK rejects forged tenant)');
+-- @end:insert
+
+-- @cmd:update ---------------------------------------------------------------
+select is_empty(
+  'update public.{{TABLE}} set created_by = auth.uid() where {{TENANT_COL}} = ''{{ORG_B}}'' returning id',
+  'UPDATE: alice CANNOT update org B rows (USING filter -> 0 rows)');
+select throws_ok(
+  'update public.{{TABLE}} set {{TENANT_COL}} = ''{{ORG_B}}'' where id = ''{{ROW_A}}''',
+  '42501',
+  'new row violates row-level security policy for table "{{TABLE}}"',
+  'UPDATE: alice CANNOT reassign her own row to org B (tenant hop blocked)');
+-- @end:update
+
+-- @cmd:delete ---------------------------------------------------------------
+select is_empty(
+  'delete from public.{{TABLE}} where {{TENANT_COL}} = ''{{ORG_B}}'' returning id',
+  'DELETE: alice CANNOT delete org B rows (USING filter -> 0 rows)');
+-- @end:delete
+
+-- ---------------------------------------------------------------------------
+-- GROUND TRUTH: re-read as superuser; tenant B's original row was never touched.
+-- ---------------------------------------------------------------------------
+reset role;
+select set_config('request.jwt.claims', '', true);
+select isnt_empty(
+  'select 1 from public.{{TABLE}} where id = ''{{ROW_B}}''',
+  'ground truth: tenant B''s row survived every attack by alice');
+
+select * from finish();
+rollback;

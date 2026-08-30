@@ -1,0 +1,42 @@
+# Drop-in GitHub Actions workflow for the RLS regression floor.
+# Step 6 copies this to .github/workflows/db-tests.yml (ADDITIVE — it does not touch the
+# existing ci.yml). The `name:` of the job below is LOAD-BEARING: it becomes the
+# required-status-check `context`. After the first run, make it required on the default
+# branch (detect it — don't assume main) so a red suite actually blocks the
+# dev-loop's `gh pr merge --auto --squash`:
+#
+#   gh api -X PUT repos/<owner>/<repo>/branches/<default-branch>/protection \
+#     --input - <<'JSON'
+#   { "required_status_checks": { "strict": true, "checks": [ { "context": "db-tests" } ] },
+#     "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null }
+#   JSON
+#
+# Until that is applied (by a human — shared-branch protection is outside the autonomous
+# write floor), this check is ADVISORY. Verify with `gh pr checks` that the context is
+# exactly "db-tests", or PRs hang on an expected-but-never-reported check.
+name: db-tests
+
+on:
+  push:
+    branches: [main]   # change to your repo's default branch
+  pull_request:
+
+jobs:
+  db-tests:
+    name: db-tests          # <- must equal the branch-protection context
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      # Boots local Postgres and applies everything in supabase/migrations
+      # (there is no seed.sql in this repo). Lighter than `supabase start`.
+      - name: Start local database
+        run: supabase db start
+
+      # pg_prove over supabase/tests/**; exits non-zero on any failed assertion.
+      - name: Run RLS isolation tests
+        run: supabase test db
