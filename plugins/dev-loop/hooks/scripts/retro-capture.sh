@@ -4,7 +4,7 @@
 # When a session ends with un-captured work (uncommitted files, or commits since the last
 # recorded retro), this emits a structured reminder to bank the session's lessons into the
 # GIT-BACKED stores — never only in ephemeral ~/.claude — routed by kind:
-#   • lessons / facts / decisions        → the vault (vault-companion, or /dev-loop:retro)
+#   • lessons / facts / decisions        → your knowledge vault / notes (via /dev-loop:retro)
 #   • a better/worse way to do a task     → a skill upgrade via skill-forge (in the marketplace)
 #   • a recurring bug class               → a ratchet guard (lint rule / block-* hook / test)
 #   • a durable global rule               → a claude-config CLAUDE.md ratchet
@@ -59,7 +59,7 @@ fi
 printf '[retro] session ending with un-captured work: %s uncommitted file(s), %s.\n' "${DIRTY:-0}" "$SINCE"
 printf '        Bank the durable lessons NOW (while context is fresh) into the git-backed stores:\n'
 printf '          • run /dev-loop:retro — routes each lesson to where it compounds:\n'
-printf '              – facts / decisions / project reality → the vault (vault-companion)\n'
+printf '              – facts / decisions / project reality → your knowledge vault / notes\n'
 printf '              – a better way to do a task           → a skill upgrade (skill-forge, in the marketplace)\n'
 printf '              – a recurring bug class               → a ratchet guard (lint / block-* hook / test)\n'
 printf '              – a durable global rule               → a claude-config CLAUDE.md ratchet\n'
