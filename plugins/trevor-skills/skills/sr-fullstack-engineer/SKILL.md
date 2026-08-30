@@ -121,7 +121,7 @@ A "quick, targeted build" that turned out *not* to be quick is the signal worth 
 path was clear and the build was boring, skip this phase entirely — that is the common case and
 forcing a note on it is how a knowledge base fills with noise.
 
-Hand to `vault-companion` when the work surfaced any of:
+Capture it to your knowledge vault (via `vault-companion` if you have it) when the work surfaced any of:
 - A gate that failed for a **non-obvious** reason (the fix was not where the error pointed).
 - A library, API, or platform behaving differently than its docs claim.
 - A repo convention you had to discover the hard way and would have to rediscover next time.

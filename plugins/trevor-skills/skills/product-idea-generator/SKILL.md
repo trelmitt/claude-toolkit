@@ -10,9 +10,8 @@ description: >-
   my idea", "what am I missing", "should we build X", "our competitor just did Y". Don't wait for
   "brainstorm" or "ideas" — fire on the intent. Pick the mode from whether a saved list is wanted;
   if unclear, ask. Project-agnostic, any domain or stage. Routing: ONE expert's decisive call on a
-  specific positioning question → product-strategy-consultant; multi-angle adversarial stress-test
-  of a decision → shadow-board-advisor; choosing across PROJECTS → portfolio-orchestrator; if the
-  competitive field needs mapping first → competitive-analysis, then bring its plan back here. Run
+  specific positioning question → product-strategy-consultant; if the competitive field needs
+  mapping first → competitive-analysis, then bring its plan back here. Run
   BEFORE feature-roadmap-builder.
 ---
 
@@ -170,7 +169,7 @@ A good session opens up before it narrows down.
 The output is sharpened thinking, so **don't silently produce a document**. But the residue is worth
 banking. At the end, *offer*:
 
-- To save the durable takeaways to the vault via **`vault-companion`** — the direction, the
+- To save the durable takeaways to your knowledge vault (via **`vault-companion`** if you have it) — the direction, the
   assumptions to test, what was set aside and why.
 - To switch to **GENERATE mode** if they now want a ranked, scored shortlist they can act on.
 

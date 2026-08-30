@@ -145,7 +145,7 @@ After the report, output the corrected code with inline comments marking every c
 - **Match depth to input.** A 10-line snippet gets a focused audit. A full module gets a comprehensive one.
 - **Language-agnostic** — apply the same rigor to Python, TypeScript, SQL, Go, Bash, or any other language.
 - **Route Supabase deep-dives.** This skill does a first-pass on Supabase migrations, RLS policies, and edge functions; defer the authoritative review to the `supabase-security-reviewer` agent. To lock a fixed RLS policy with an executable regression test (proving per-tenant row isolation), hand off to the `supabase-rls-test-harness` skill.
-- **Ratchet a repeat offender.** When a CRITICAL/HIGH is the *second* time you've seen that vulnerability class in this codebase, patching it again is not enough — it will come back. Name the guard that would make it structurally impossible (lint rule, hook, type, regression test), and hand the class + guard to `vault-companion` so the next session on any machine starts knowing it. One-off findings don't need this; recurring ones do.
+- **Ratchet a repeat offender.** When a CRITICAL/HIGH is the *second* time you've seen that vulnerability class in this codebase, patching it again is not enough — it will come back. Name the guard that would make it structurally impossible (lint rule, hook, type, regression test), and capture the class + guard to your knowledge vault (via `vault-companion` if you have it) so the next session on any machine starts knowing it. One-off findings don't need this; recurring ones do.
 
   Never put the vulnerable code, the exploit, secrets, or any PHI/PII in the vault note — describe the *class* and the guard, nothing reproducible.
 

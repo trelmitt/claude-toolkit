@@ -37,7 +37,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
-UA = "build-vs-borrow-oss-scout/1.0 (+https://github.com/trelmitt)"
+UA = "build-vs-borrow-oss-scout/1.0 (+research; respectful one-shot fetch)"
 TIMEOUT = 12  # seconds per request
 
 # --- SPDX license classification ------------------------------------------------

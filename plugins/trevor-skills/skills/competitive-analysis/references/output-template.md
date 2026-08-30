@@ -68,7 +68,7 @@ If the run is decisive, lead with the action — context follows. Do not bury th
 
 ## 2. The dossier (vault, compounding memory)
 
-The dossier is what makes re-runs cheap and lets you see *what changed*. Write via the `vault-companion` skill (don't write the vault directly) so its conventions/guardrails apply. Location: the product's vault Project area, e.g. a note `Competitive Dossier — <Product>` linked from `Projects/<Product>`.
+The dossier is what makes re-runs cheap and lets you see *what changed*. Write it to your knowledge vault — via the `vault-companion` skill if you have one (so its conventions/guardrails apply), otherwise write the note directly. Location: the product's vault Project area, e.g. a note `Competitive Dossier — <Product>` linked from `Projects/<Product>`.
 
 It holds the latest per-competitor schema objects plus metadata that drives the refresh:
 
@@ -99,7 +99,7 @@ The analysis is an *input*, not a dead-end doc. Close by routing:
 
 - **`feature-roadmap-builder`** — hand it the Now/Next/Later action plan (the feature-type recommendations) to turn into a scored, sequenced roadmap. This is the primary handoff.
 - **`product-strategy-consultant`** — for a single thorny positioning/pricing decision the analysis surfaced.
-- **`shadow-board-advisor`** — to stress-test a high-stakes survivor recommendation across a full panel (beyond the built-in red-team).
+- **`shadow-board-advisor`** (if installed) — to stress-test a high-stakes survivor recommendation across a full panel (beyond the built-in red-team).
 - **`build-vs-borrow`** — when a recommended feature is a commodity capability, check whether to adopt OSS before building it.
 
 Name the handoff explicitly in the report's footer so the next step is obvious, e.g.: *"Next: run `feature-roadmap-builder` on the Now/Next/Later plan above."*

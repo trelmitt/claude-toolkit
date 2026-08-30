@@ -107,8 +107,8 @@ When you reject a one-shot migration, hand back the expand-migrate-contract rewr
    `supabase-rls-test-harness` for the isolation proof. If it touches PHI export/logging, point to
    `sr-security-auditor`.
 6. **Capture** — if a 🔴/🟠 finding came from a pattern you'd expect to recur (a lock behaviour
-   that surprised you, a Postgres version quirk, a rewrite that turned out unsafe), hand it to
-   `vault-companion`, paired with the ratchet that would catch it next time. A finding fixed in
+   that surprised you, a Postgres version quirk, a rewrite that turned out unsafe), capture it to your
+   knowledge vault (via `vault-companion` if you have it), paired with the ratchet that would catch it next time. A finding fixed in
    one PR and never written down gets re-litigated in three months. Routine 🟡s need no note.
 
 If the migration is clean, say so plainly in one or two lines — don't manufacture findings.

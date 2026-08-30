@@ -9,9 +9,8 @@ description: >-
   differentiate from competitors, or how to grow revenue/users. Output is a structured strategy
   memo: situation, the core question, 2–4 options with tradeoffs, and a recommended path. Covers
   Healthcare / Health Tech, B2B SaaS, and Consumer Apps. Routing: GENERATE a ranked feature list →
-  product-idea-generator; STRESS-TEST from six adversarial perspectives → shadow-board-advisor;
-  choose what to work on ACROSS projects → portfolio-orchestrator; if the decision hinges on
-  competitor/market facts you don't yet have, run competitive-analysis first, then decide here.
+  product-idea-generator; if the decision hinges on competitor/market facts you don't yet have,
+  run competitive-analysis first, then decide here.
 ---
 
 # Senior Product Strategy Consultant

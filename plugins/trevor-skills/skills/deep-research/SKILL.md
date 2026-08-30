@@ -75,8 +75,7 @@ INTAKE → DECOMPOSE+CONFIRM → FAN-OUT → SYNTHESIZE → RED-TEAM → OUTPUT 
    fetches → extracts → discards, which Haiku does cheaply and which is already bounded to ~1–2k out.
    Keep these `general-purpose`: they need `WebFetch`/`WebSearch`, which the restricted `scout`/`verifier`
    types don't carry — so here the **model tier is the only lever, not `agentType`** (floor caveat in the
-   ladder). ("Model class" is a separate axis from the quick/standard/deep breadth **tiers** below; ladder:
-   [`../agent-orchestrator/references/agent-tiers.md`](../agent-orchestrator/references/agent-tiers.md).)
+   ladder). ("Model class" is a separate axis from the quick/standard/deep breadth **tiers** below.)
 4. **SYNTHESIZE** (in the orchestrator — cheap reasoning over compact rows): assemble the findings
    into a coherent answer with a clear **headline conclusion**, every claim carrying its source and
    confidence, an **implication** for the user's decision on each, and an explicit
@@ -86,12 +85,12 @@ INTAKE → DECOMPOSE+CONFIRM → FAN-OUT → SYNTHESIZE → RED-TEAM → OUTPUT 
    make this wrong" / weakest-source check) on the **verify model class** (`model: 'sonnet'`) — the
    reasoning that decides whether the headline holds earns the stronger model. Keep it if it
    survives; qualify or revise it if it doesn't; record what changed. Offer to escalate a high-stakes
-   conclusion to `shadow-board-advisor`.
+   conclusion to `shadow-board-advisor` (if you have it installed).
 6. **OUTPUT.** Write the report as a Markdown **artifact** (structure in
    `references/report-template.md`): headline answer, findings-with-sources, conflicts/unknowns,
    confidence, and a **Sources** list. Every non-obvious claim is cited; nothing is asserted bare.
-7. **VAULT / HANDOFF.** If there's a durable, non-obvious finding, deposit it to the vault via
-   `vault-companion`. Route onward when the question turns out to be something else — see *Routing*.
+7. **VAULT / HANDOFF.** If there's a durable, non-obvious finding, deposit it to your knowledge vault
+   (via `vault-companion` if you have it). Route onward when the question turns out to be something else — see *Routing*.
 
 ## Tiers (breadth/depth, never the citation floor)
 
@@ -125,8 +124,8 @@ data" is a valid, valuable result, not a failure.
 - **`build-vs-borrow`** — the research is an imminent build of a commodity capability (DECIDE mode's
   build-or-borrow verdict), or adopting one specific existing open-source component (ADOPT mode's
   pick + integration plan).
-- **`shadow-board-advisor`** — stress-test a high-stakes conclusion beyond the built-in red-team.
-- **`vault-companion`** — deposit a durable, non-obvious finding so the next session starts smarter.
+- **`shadow-board-advisor`** (if installed) — stress-test a high-stakes conclusion beyond the built-in red-team.
+- **`vault-companion`** (if installed) — deposit a durable, non-obvious finding so the next session starts smarter.
 
 ## References
 

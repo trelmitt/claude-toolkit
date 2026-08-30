@@ -37,7 +37,6 @@ Per cycle, the orchestrator does only this:
    type (no Agent tool, no connectors). The SELF-AUDIT security gate keeps its own strong model — it
    routes through `sr-security-auditor` — regardless of the builder's tier; **never downshift the
    security review.**
-   Model classes: [`../../agent-orchestrator/references/agent-tiers.md`](../../agent-orchestrator/references/agent-tiers.md).
 4. **Record that one-line delta** and **loop.** Do *not* re-read the repo or the full state file
    in the orchestrator — trust the scout's next fresh read. Re-reading is exactly what
    reintroduces the quadratic growth you just removed.
