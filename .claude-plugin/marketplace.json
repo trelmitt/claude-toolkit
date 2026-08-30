@@ -20,6 +20,7 @@
       "name": "trevor-skills",
       "source": "./plugins/trevor-skills",
       "description": "A portable skill set for shipping software: cracked-dev, skill-forge, sr-fullstack-engineer, sr-security-auditor, deep-research, build-vs-borrow, oss-scout, migration-safety-reviewer, supabase-rls-test-harness, evaluator, and product/strategy skills. Works standalone; notes-vault features are optional.",
+      "version": "1.0.0",
       "author": {
         "name": "Trevor Elmitt"
       }

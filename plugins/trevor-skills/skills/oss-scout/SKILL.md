@@ -204,5 +204,5 @@ write was skipped.
 `product-idea-generator` and `feature-roadmap-builder` upstream (they decide
 *what* to build; oss-scout decides *whether to build it at all*);
 `cracked-dev` downstream (the memo's integration sketch converts directly
-into its first tickets); `vault-companion` for vault conventions;
+into its first tickets); `vault-companion` (if you have it) for vault conventions;
 `Context7` for pulling a chosen library's docs after an ADOPT verdict.

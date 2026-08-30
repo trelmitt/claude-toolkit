@@ -69,7 +69,7 @@ When the registry already answers the current need, cite the row and stop — do
 
 The vault note is the *portable, cross-repo* memory; the repo ADR is the *local, with-the-code* memory. They're complementary — a verdict made in one repo ("recharts is our charting standard, MIT, vetted") informs the next project.
 
-Suggested capture (let vault-companion format it to the vault's template):
+Suggested capture (if you use vault-companion, let it format the note to the vault's template):
 - **What:** the need + the verdict (DEPEND/FORK/VENDOR/BUILD) + the chosen option.
 - **Why it's durable:** the non-obvious reason — e.g. "rejected the 9k-star option because AGPL is incompatible with our proprietary EMR", or "built our own because every OSS option logged PHI client-side".
 - **Surface:** `code`. **Links:** the repo, the ADR, and any sibling decision.

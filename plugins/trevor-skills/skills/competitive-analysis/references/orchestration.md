@@ -77,7 +77,7 @@ This is the fix for "recommendations weren't stress-tested enough." Take the **t
 - **Resource/constraint** — can we actually build/ship/sell this given our size and stack? What's the hidden cost?
 - **"Why this fails"** — steelman the case against; what has to be true for it to flop?
 
-A recommendation **survives** only if it withstands the panel (majority not-refuted). Survivors stay; the rest get revised (narrowed/sequenced differently) or dropped with a one-line reason. State, in the report, what the red-team changed — that visible scar tissue is what makes the plan trustworthy. For a truly high-stakes call, offer to escalate the survivor to `shadow-board-advisor` for a full panel.
+A recommendation **survives** only if it withstands the panel (majority not-refuted). Survivors stay; the rest get revised (narrowed/sequenced differently) or dropped with a one-line reason. State, in the report, what the red-team changed — that visible scar tissue is what makes the plan trustworthy. For a truly high-stakes call, offer to escalate the survivor to `shadow-board-advisor` (if you have it installed) for a full panel.
 
 ---
 

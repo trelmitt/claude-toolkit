@@ -1,6 +1,7 @@
 {
   "name": "trevor-skills",
   "description": "A portable Claude skill set for shipping software: cracked-dev (autonomous build agent), skill-forge (skill meta-tooling), sr-fullstack-engineer, sr-security-auditor, deep-research, build-vs-borrow / oss-scout (prior-art + OSS adoption), migration-safety-reviewer, supabase-rls-test-harness, evaluator, and product/strategy skills (product-idea-generator, product-strategy-consultant, feature-roadmap-builder, competitive-analysis, time-sense). Works standalone; the few notes-vault features are optional and no-op when no vault is configured.",
+  "version": "1.0.0",
   "author": {
     "name": "Trevor Elmitt"
   }

@@ -131,7 +131,7 @@ you ruled out, and the next candidates. Format per **`references/state-file.md`*
 
 **Then deposit anything durable into the vault.** `state.md` is repo-scoped and branch-local —
 it dies with the repo and never reaches your other machines. A lesson that would change how you
-work in a *different* repo belongs in the vault instead, via **`vault-companion`** (it enforces
+work in a *different* repo belongs in your knowledge vault instead (via **`vault-companion`** if you have it — it enforces
 the capture guardrails; don't hand-write vault files from here).
 
 The split, so you don't double-log:

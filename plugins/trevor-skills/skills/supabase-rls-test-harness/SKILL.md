@@ -104,7 +104,7 @@ it does not replace it.
 ### Step 8 — Capture what the mutation check taught you
 Step 5 makes a test fail on purpose. When a test you *expected* to go red stayed green, you
 found a blind spot in how the policy was read — that is the highest-value output of this whole
-skill and it is lost the moment the PR merges. Hand it to **`vault-companion`**: the policy
+skill and it is lost the moment the PR merges. Capture it to your knowledge vault (via **`vault-companion`** if you have it): the policy
 shape, the assertion that failed to catch it, and the fix.
 
 Capture only genuine surprises — a routine green→red→green cycle needs no note.

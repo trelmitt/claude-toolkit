@@ -63,9 +63,9 @@ INTAKE → DISCOVER+CONFIRM → FAN-OUT → SYNTHESIZE → RED-TEAM → OUTPUT+D
 5. **RED-TEAM.** Take the top 3 recommendations; spawn a small panel per recommendation, each a
    distinct adversarial lens (competitor counter-move / skeptical investor / resource-constraint /
    "why this fails"). Keep only survivors; revise or drop the rest; record what changed. Offer to
-   escalate a high-stakes survivor to `shadow-board-advisor`.
+   escalate a high-stakes survivor to `shadow-board-advisor` (if you have it installed).
 6. **OUTPUT + DOSSIER.** Write the decision-grade report (Markdown artifact) and update the
-   incremental **competitor dossier in the vault** via `vault-companion`. Templates:
+   incremental **competitor dossier in your knowledge vault** (via `vault-companion` if you have it). Templates:
    `references/output-template.md`.
 7. **HANDOFF.** Route the action plan onward (see *Routing* below). The analysis is an input to the
    product flywheel, not a dead-end doc.
@@ -101,7 +101,7 @@ sooner; high confidence → re-run only when a trigger fires. The report states 
 This is the **external-market input** to the product flywheel — it feeds, it doesn't replace:
 - **`feature-roadmap-builder`** — the primary handoff: turn the Now/Next/Later plan into a scored roadmap.
 - **`product-strategy-consultant`** — one thorny positioning/pricing decision the analysis surfaced.
-- **`shadow-board-advisor`** — stress-test a high-stakes survivor beyond the built-in red-team.
+- **`shadow-board-advisor`** (if installed) — stress-test a high-stakes survivor beyond the built-in red-team.
 - **`build-vs-borrow`** — when a recommended feature is a commodity capability, before building it.
 - **`deep-research`** — if the question turns out to be general (non-competitive) research, hand back.
 

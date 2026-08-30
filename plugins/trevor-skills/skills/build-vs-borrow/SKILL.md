@@ -149,7 +149,7 @@ Decide and state it plainly (full criteria + decision tree in the rubric):
 Write the decision to all three (templates in `references/adr-template.md`):
 1. A **repo ADR** (`docs/adr/` if the repo has one, else `.build-vs-borrow/adr/NNNN-<slug>.md`).
 2. A one-line row in the **decisions registry** (`.build-vs-borrow/decisions.md`).
-3. A **vault note** via the `vault-companion` skill — but only when there's a durable, non-obvious
+3. A **vault note** in your knowledge vault (via the `vault-companion` skill if you have it) — but only when there's a durable, non-obvious
    lesson (a routine "depended on a popular MIT lib, no surprises" lives fine in the ADR alone).
 
 ---

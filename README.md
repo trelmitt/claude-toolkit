@@ -80,8 +80,9 @@ Grouped by what you'd reach for. All 15 are independent — install once, use an
 Safety hooks that run automatically, plus a few workflow commands. Opinionated on purpose — if a
 guardrail doesn't fit, disable the plugin or edit the hook.
 
-- **Protection hooks** (run before tool calls): block pushes/commits to protected branches, block
-  force-push, block `.env`/secret writes, and scan for live secrets before a commit.
+- **Protection hooks** (run before tool calls): block `.env`/secret writes and scan for live
+  secrets before a commit (always on); plus block pushes/commits to protected branches and
+  force-push in repos that opt in by tracking a `CLAUDE.md`.
 - **Session hooks**: situational-awareness context at start; a git-identity guard; an
   end-of-session retro nudge; an optional notes-vault tidy (only if you point it at a vault).
 - **`supabase-security-reviewer`** subagent: audits pending Supabase + Stripe changes for missing
